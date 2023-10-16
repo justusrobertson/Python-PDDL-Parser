@@ -2,21 +2,30 @@ from HashMap import HashTable
 
 
 class Predicate:
-    def __init__(self, name, parameters):
+    def __init__(self, name, parameters, binding_values):
         self.name = name
         self.parameters = parameters
         self.bindings = HashTable(len(parameters))
-        for parameter in parameters:
-            self.bindings.set_val(parameter, "object ")
+        i = 0
+        for parameter in self.parameters:
+            self.bindings.set_val(parameter, binding_values[i])
+            i += 1
+
+    def get_predicate_form(self):
+        statement_to_print = f"({self.name}"
+        for parameter in self.parameters:
+            statement_to_print += f" ?{parameter}"
+        statement_to_print += ")"
+        print(statement_to_print)
 
     def to_string(self):
         statement_to_print = f"({self.name}"
         for parameter in self.parameters:
-            statement_to_print += f" ?{parameter}"
-            # print(f"{self.bindings.get_val(self.parameters[1])}")
+            statement_to_print += f" {self.bindings.get_val(parameter)}"
         statement_to_print += ")"
         print(statement_to_print)
 
 
-new_predicate = Predicate("at", ["obj", "location"])
+new_predicate = Predicate("at", ["obj", "location"], ["var 1", "var 2"])
+new_predicate.get_predicate_form()
 new_predicate.to_string()

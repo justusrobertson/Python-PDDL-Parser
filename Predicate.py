@@ -26,6 +26,6 @@ class Predicate:
         print(statement_to_print)
 
 
-new_predicate = Predicate("at", ["obj", "location"], ["var 1", "var 2"])
-new_predicate.get_predicate_form()
-new_predicate.to_string()
+# new_predicate = Predicate("at", ["obj", "location"], ["var 1", "var 2"])
+# new_predicate.get_predicate_form()
+# new_predicate.to_string()

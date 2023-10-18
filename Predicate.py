@@ -18,14 +18,14 @@ class Predicate:
         statement_to_print += ")"
         print(statement_to_print)
 
-    def to_string(self):
+    def __str__(self):
         statement_to_print = f"({self.name}"
         for parameter in self.parameters:
             statement_to_print += f" {self.bindings.get_val(parameter)}"
         statement_to_print += ")"
-        print(statement_to_print)
-
+        return statement_to_print
 
 # new_predicate = Predicate("at", ["obj", "location"], ["var 1", "var 2"])
 # new_predicate.get_predicate_form()
-# new_predicate.to_string()
+# print(new_predicate)
+

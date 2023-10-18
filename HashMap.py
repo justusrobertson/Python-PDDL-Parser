@@ -1,5 +1,6 @@
 class HashTable:
-
+    # turns out this is useless because dict already exists in python, but no one told me this ;-;
+    # A = dict()
     # Create empty bucket list of given size
     def __init__(self, size):
         self.size = size

@@ -13,8 +13,9 @@ class Action:
         self.preconditions = preconditions
 
 
-
-newAction = Action("move", ["mover", "oldLoc", "newLoc"], ["arthur", "forest", "lake"], "")
+preconditionList = [Predicate("at", ["mover", "location"], ["arthur", "forest"])]
+effectsList = [Predicate("at", ["mover", "location"], ["arthur", "forest"])]
+newAction = Action("move", ["mover", "oldLoc", "newLoc"], ["arthur", "forest", "lake"], preconditionList)
 
 print(newAction.parameters)
 print(newAction.bindings)

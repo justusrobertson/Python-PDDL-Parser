@@ -30,11 +30,11 @@ class Predicate:
         return statement_to_print
 
 
-new_predicate = Predicate("at", ["obj", "location"])
+# new_predicate = Predicate("at", ["obj", "location"])
 # new_predicate.get_predicate_form()
-print(new_predicate)
-new_predicate.set_binding("obj", "arthur")
-print(new_predicate)
-new_predicate.set_binding("location", "woods")
-print(new_predicate)
+# print(new_predicate)
+# new_predicate.set_binding("obj", "arthur")
+# print(new_predicate)
+# new_predicate.set_binding("location", "woods")
+# print(new_predicate)
 

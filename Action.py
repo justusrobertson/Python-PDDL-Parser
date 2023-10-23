@@ -12,10 +12,15 @@ class Action:
             i += 1
         self.preconditions = []
 
-
     # precondition should be a Predicate
     def add_precondition(self, precondition):
+        # predicate input sanitization
+        for parameter in precondition.parameters:
+            if parameter not in self.parameters:
+                print(f"The Predicate parameter '{parameter}' does not exist as an action parameter.")
+                return
         self.preconditions.append(precondition)
+
     def set_binding(self, parameter, binding_value):
         self.bindings.set_val(parameter, binding_value)
         for predicate in self.preconditions:
@@ -24,7 +29,7 @@ class Action:
 
 effectsList = [Predicate("at", ["mover", "location"])]
 newAction = Action("move", ["mover", "oldLoc", "newLoc"])
-newAction.add_precondition(Predicate("at", ["mover", "location"]))
+newAction.add_precondition(Predicate("at", ["mover", "oldLoc"]))
 print(newAction.parameters)
 print(newAction.bindings)
 print(newAction.preconditions[0])

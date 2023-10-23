@@ -2,16 +2,17 @@ from HashMap import HashTable
 
 
 class Predicate:
-    def __init__(self, name, parameters, binding_values):
+    def __init__(self, name, parameters):
         self.name = name
         self.parameters = parameters
         self.bindings = HashTable(len(parameters))
-        # TODO:allow binding values to be null.
-        # TODO: consider having a tracker to see which values are bound
         i = 0
         for parameter in self.parameters:
-            self.bindings.set_val(parameter, binding_values[i])
+            self.bindings.set_val(parameter, f"?{parameter}")
             i += 1
+
+    def set_binding(self, parameter, binding_value):
+        self.bindings.set_val(parameter, binding_value)
 
     def get_predicate_form(self):
         statement_to_print = f"({self.name}"
@@ -20,7 +21,7 @@ class Predicate:
         statement_to_print += ")"
         print(statement_to_print)
 
-    # TODO: consider reworking toString so that it prints the parameter if there's no binding
+    # Prints the parameter by default, prints the binding otherwise.
     def __str__(self):
         statement_to_print = f"({self.name}"
         for parameter in self.parameters:
@@ -28,7 +29,12 @@ class Predicate:
         statement_to_print += ")"
         return statement_to_print
 
-new_predicate = Predicate("at", ["obj", "location"], ["var 1", "var 2"])
-new_predicate.get_predicate_form()
+
+new_predicate = Predicate("at", ["obj", "location"])
+# new_predicate.get_predicate_form()
+print(new_predicate)
+new_predicate.set_binding("obj", "arthur")
+print(new_predicate)
+new_predicate.set_binding("location", "woods")
 print(new_predicate)
 

@@ -26,10 +26,20 @@ class Action:
         for predicate in self.preconditions:
             predicate.set_binding(parameter, binding_value)
 
-
+    def __str__(self):
+        statement_to_print = f"(:action {self.name}\n"
+        statement_to_print += " \t:parameters ("
+        for parameter in self.parameters:
+            statement_to_print += f" {self.bindings.get_val(parameter)}"
+        statement_to_print += ")\n"
+        statement_to_print += "\t:precondition\n"
+        statement_to_print += "\t\t(and\n"
+        statement_to_print += "\t\t\t"
+        return statement_to_print
 effectsList = [Predicate("at", ["mover", "location"])]
 newAction = Action("move", ["mover", "oldLoc", "newLoc"])
 newAction.add_precondition(Predicate("at", ["mover", "oldLoc"]))
 print(newAction.parameters)
 print(newAction.bindings)
 print(newAction.preconditions[0])
+print(newAction)

@@ -11,8 +11,10 @@ class Action:
             self.bindings.set_val(parameter, f"?{parameter}")
             i += 1
         self.preconditions = []
+        self.effects = []
 
     # precondition should be a Predicate
+    # TODO: need to add a bool that says whether or not to negate precondition
     def add_precondition(self, precondition):
         # predicate input sanitization
         for parameter in precondition.parameters:
@@ -20,6 +22,16 @@ class Action:
                 print(f"The Predicate parameter '{parameter}' does not exist as an action parameter.")
                 return
         self.preconditions.append(precondition)
+
+    # effect should be a Predicate
+    # TODO: need to add a bool that says whether or not to negate precondition
+    def add_effect(self, effect):
+        # effect input sanitization
+        for parameter in effect.parameters:
+            if parameter not in self.parameters:
+                print(f"The Effect parameter '{parameter}' does not exist as an action parameter.")
+                return
+        self.effects.append(effect)
 
     def set_binding(self, parameter, binding_value):
         self.bindings.set_val(parameter, binding_value)
@@ -40,15 +52,16 @@ class Action:
         statement_to_print += "\t\t)\n"
         statement_to_print += " \t:effect\n"
         statement_to_print += "\t\t(and\n"
-
+        for effect in self.effects:
+            statement_to_print += f"\t\t\t{effect}\n"
         statement_to_print += "\t\t)\n"
         return statement_to_print
-effectsList = [Predicate("at", ["mover", "location"])]
+
+
 newAction = Action("move", ["mover", "oldLoc", "newLoc"])
 newAction.add_precondition(Predicate("at", ["mover", "oldLoc"]))
 newAction.add_precondition(Predicate("at", ["mover", "oldLoc"]))
-
-print(newAction.parameters)
-print(newAction.bindings)
-print(newAction.preconditions[0])
+newAction.add_effect(Predicate("at", ["mover", "newLoc"]))
+# print(newAction.parameters)
+# print(newAction.bindings)
 print(newAction)

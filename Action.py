@@ -34,11 +34,20 @@ class Action:
         statement_to_print += ")\n"
         statement_to_print += "\t:precondition\n"
         statement_to_print += "\t\t(and\n"
-        statement_to_print += "\t\t\t"
+        for precondition in self.preconditions:
+            statement_to_print += f"\t\t\t{precondition}\n"
+
+        statement_to_print += "\t\t)\n"
+        statement_to_print += " \t:effect\n"
+        statement_to_print += "\t\t(and\n"
+
+        statement_to_print += "\t\t)\n"
         return statement_to_print
 effectsList = [Predicate("at", ["mover", "location"])]
 newAction = Action("move", ["mover", "oldLoc", "newLoc"])
 newAction.add_precondition(Predicate("at", ["mover", "oldLoc"]))
+newAction.add_precondition(Predicate("at", ["mover", "oldLoc"]))
+
 print(newAction.parameters)
 print(newAction.bindings)
 print(newAction.preconditions[0])

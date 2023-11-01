@@ -9,7 +9,7 @@ class State:
         self.literals = literals
         self.state_dictionary = HashTable(len(literals))
         for literal in literals:
-            self.state_dictionary.set_val(literal.name, True)
+            self.state_dictionary.set_val(f"{literal.to_string_ignoring_negation()}", not literal.is_negated)
 
     def __str__(self):
         statement_to_print = ""
@@ -22,7 +22,7 @@ class State:
 predicate_list = [
     Predicate("player", ["player"], False),
     Predicate("character", ["character"], False),
-    Predicate("alive", ["character"], False)
+    Predicate("alive", ["character"], True)
 ]
 
 predicate_list[0].set_binding("player", "arthur")
@@ -31,3 +31,9 @@ predicate_list[2].set_binding("character", "arthur")
 
 new_state = State(predicate_list)
 print(new_state)
+
+# print(predicate_list[0].to_string_ignoring_negation())
+print(new_state.state_dictionary.get_val(f"{predicate_list[0].to_string_ignoring_negation()}"))
+print(new_state.state_dictionary.get_val(f"{predicate_list[1].to_string_ignoring_negation()}"))
+print(new_state.state_dictionary.get_val(f"{predicate_list[2].to_string_ignoring_negation()}"))
+

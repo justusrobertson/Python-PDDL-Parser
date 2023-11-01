@@ -7,10 +7,8 @@ class Predicate:
         self.parameters = parameters
         self.is_negated = is_negated
         self.bindings = HashTable(len(parameters))
-        i = 0
         for parameter in self.parameters:
             self.bindings.set_val(parameter, f"?{parameter}")
-            i += 1
 
     def set_binding(self, parameter, binding_value):
         self.bindings.set_val(parameter, binding_value)

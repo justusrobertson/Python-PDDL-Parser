@@ -2,6 +2,7 @@ from HashMap import HashTable
 
 
 class Predicate:
+    # bindings not required so we may have generic predicates
     def __init__(self, name, parameters, is_negated):
         self.name = name
         self.parameters = parameters

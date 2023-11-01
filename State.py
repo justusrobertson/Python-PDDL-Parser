@@ -11,6 +11,26 @@ class State:
         for literal in literals:
             self.state_dictionary.set_val(f"{literal.to_string_ignoring_negation()}", not literal.is_negated)
 
+    # action_templates is a list of Actions
+    def get_possible_actions(self, pddl_object, action_templates):
+        possible_actions = []
+        for action in action_templates:
+
+            # is recursion needed here? I need a number of for loops = to the number of bindings
+            for parameter in action.parameters:
+                if len(action.parameters == 1):
+                    possible_actions.append(action)
+                    possible_actions[len(possible_actions) - 1].set_binding(parameter, parameter)
+                    break
+                # for parameterCombination in action.parameters:
+                #     if parameter == parameterCombination:
+                #         continue
+                #
+                #     possible_actions.append(action)
+                #     possible_actions[len(possible_actions) - 1].set_binding(parameter, parameter)
+
+
+
     def __str__(self):
         statement_to_print = ""
         for literal in self.literals:

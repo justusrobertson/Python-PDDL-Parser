@@ -2,6 +2,7 @@ from Predicate import *
 
 
 class Action:
+    # bindings are not required so that we may have 'action templates'
     def __init__(self, name, parameters):
         self.name = name
         self.parameters = parameters

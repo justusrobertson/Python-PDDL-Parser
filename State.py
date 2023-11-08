@@ -31,10 +31,18 @@ class State:
 
     # current action is an action that's initially unbound.
     def compute_action_binds(self, objects, current_action, set_of_binds):
-        if current_action.is_fully_bound():
+        if not current_action.is_fully_bound():
             for pddl_object in objects:
-                copy_action = current_action
+                copy_action = Action("", "")
+                copy_action.__copy__(current_action)
+                # find the first unbound parameter the break
+                for parameter in copy_action.parameters:
+                    if copy_action.bindings.get_val(parameter).__contains__("?"):
+                        copy_action.set_binding(parameter, pddl_object)
+                        return self.compute_action_binds(objects, copy_action, set_of_binds)
 
+        set_of_binds.append(current_action)
+        return set_of_binds
 
     def __str__(self):
         statement_to_print = ""
@@ -44,21 +52,31 @@ class State:
         return statement_to_print
 
 
+object_list = ["arthur"]
+
 predicate_list = [
     Predicate("player", ["player"], False),
     Predicate("character", ["character"], False),
     Predicate("alive", ["character"], True)
 ]
 
-predicate_list[0].set_binding("player", "arthur")
-predicate_list[1].set_binding("character", "arthur")
-predicate_list[2].set_binding("character", "arthur")
+predicate_list[0].set_binding("player", object_list[0])
+predicate_list[1].set_binding("character", object_list[0])
+predicate_list[2].set_binding("character", object_list[0])
+
+action_list = [Action("kill", ["victim"])]
+action_list[0].add_precondition(Predicate("alive", ["victim"], True))
+action_list[0].add_effect(Predicate("alive", ["victim"], False))
 
 new_state = State(predicate_list)
 print(new_state)
+set_of_new_bindings = []
+new_state.compute_action_binds(object_list, action_list[0], set_of_new_bindings)
 
+for fully_bound_action in set_of_new_bindings:
+    print(fully_bound_action)
 # print(predicate_list[0].to_string_ignoring_negation())
-print(new_state.state_dictionary.get_val(f"{predicate_list[0].to_string_ignoring_negation()}"))
-print(new_state.state_dictionary.get_val(f"{predicate_list[1].to_string_ignoring_negation()}"))
-print(new_state.state_dictionary.get_val(f"{predicate_list[2].to_string_ignoring_negation()}"))
+# print(new_state.state_dictionary.get_val(f"{predicate_list[0].to_string_ignoring_negation()}"))
+# print(new_state.state_dictionary.get_val(f"{predicate_list[1].to_string_ignoring_negation()}"))
+# print(new_state.state_dictionary.get_val(f"{predicate_list[2].to_string_ignoring_negation()}"))
 

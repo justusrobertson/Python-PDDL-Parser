@@ -40,9 +40,10 @@ class State:
                     if copy_action.bindings.get_val(parameter).__contains__("?"):
                         copy_action.set_binding(parameter, pddl_object)
                         self.compute_action_binds(objects, copy_action, set_of_binds)
-                        break
 
-        set_of_binds.append(current_action)
+        else:
+            set_of_binds.append(current_action)
+
         return set_of_binds
 
     def __str__(self):

@@ -78,12 +78,10 @@ object_list = ["arthur", "bill"]
 predicate_list = [
     Predicate("player", ["player"], False),
     Predicate("character", ["character"], False),
-    Predicate("alive", ["character"], True)
 ]
 
 predicate_list[0].set_binding("player", object_list[0])
 predicate_list[1].set_binding("character", object_list[0])
-predicate_list[2].set_binding("character", object_list[0])
 
 action_list = [
     Action("kill", ["victim"]),

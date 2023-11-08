@@ -67,16 +67,19 @@ predicate_list[1].set_binding("character", object_list[0])
 predicate_list[2].set_binding("character", object_list[0])
 
 action_list = [
-    Action("kill", ["victim"])
-    # Action("transform")
+    Action("kill", ["victim"]),
+    Action("transform", ["preTransformCharacter", "postTransformCharacter"])
 ]
 action_list[0].add_precondition(Predicate("alive", ["victim"], True))
 action_list[0].add_effect(Predicate("alive", ["victim"], False))
+action_list[1].add_precondition(Predicate("character", ["preTransformCharacter"], False))
+action_list[1].add_effect(Predicate("character", ["preTransformCharacter"], True))
+action_list[1].add_effect(Predicate("character", ["postTransformCharacter"], False))
 
 new_state = State(predicate_list)
 print(new_state)
 set_of_new_bindings = []
-new_state.compute_action_binds(object_list, action_list[0], set_of_new_bindings)
+new_state.compute_action_binds(object_list, action_list[1], set_of_new_bindings)
 
 for fully_bound_action in set_of_new_bindings:
     print(fully_bound_action)

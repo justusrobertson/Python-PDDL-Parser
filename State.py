@@ -39,7 +39,8 @@ class State:
                 for parameter in copy_action.parameters:
                     if copy_action.bindings.get_val(parameter).__contains__("?"):
                         copy_action.set_binding(parameter, pddl_object)
-                        return self.compute_action_binds(objects, copy_action, set_of_binds)
+                        self.compute_action_binds(objects, copy_action, set_of_binds)
+                        break
 
         set_of_binds.append(current_action)
         return set_of_binds
@@ -52,7 +53,7 @@ class State:
         return statement_to_print
 
 
-object_list = ["arthur"]
+object_list = ["arthur", "bill"]
 
 predicate_list = [
     Predicate("player", ["player"], False),
@@ -64,7 +65,10 @@ predicate_list[0].set_binding("player", object_list[0])
 predicate_list[1].set_binding("character", object_list[0])
 predicate_list[2].set_binding("character", object_list[0])
 
-action_list = [Action("kill", ["victim"])]
+action_list = [
+    Action("kill", ["victim"])
+    # Action("transform")
+]
 action_list[0].add_precondition(Predicate("alive", ["victim"], True))
 action_list[0].add_effect(Predicate("alive", ["victim"], False))
 

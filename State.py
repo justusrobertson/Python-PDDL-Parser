@@ -11,6 +11,15 @@ class State:
         for literal in literals:
             self.state_dictionary.set_val(f"{literal.to_string_ignoring_negation()}", not literal.is_negated)
 
+    def update(self, taken_action):
+        for effect in taken_action.effects:
+            if effect.is_negated:
+                # thing
+                print("Negated")
+            if not effect.is_negated:
+                self.literals.append(effect)
+                self.state_dictionary.set_val(f"{effect.to_string_ignoring_negation()}", not effect.is_negated)
+
     def check_fully_bound_actions(self, possible_actions):
         enabled_actions = []
         for possible_action in possible_actions:
@@ -26,8 +35,6 @@ class State:
                 enabled_actions.append(possible_action)
 
         return enabled_actions
-
-
 
     def precondition_in_state(self, precondition):
         # my hash map implementation has no contains key method. I should refactor things in the future.
@@ -93,18 +100,23 @@ action_list[1].add_effect(Predicate("character", ["preTransformCharacter"], True
 action_list[1].add_effect(Predicate("character", ["postTransformCharacter"], False))
 
 new_state = State(predicate_list)
-print(new_state)
+# print(new_state)
 # set_of_new_bindings = []
 # new_state.get_possible_actions(object_list, action_list, set_of_new_bindings)
 # new_state.compute_action_binds(object_list, action_list[1], set_of_new_bindings)
 
-print("fully bound actions:\n")
-for fully_bound_action in new_state.get_possible_actions(object_list, action_list):
-    print(fully_bound_action)
+# print("fully bound actions:\n")
+# for fully_bound_action in new_state.get_possible_actions(object_list, action_list):
+#     print(fully_bound_action)
 
 print("enabled actions:\n")
 for enabled_action in new_state.check_fully_bound_actions(new_state.get_possible_actions(object_list, action_list)):
     print(enabled_action)
+
+new_state.update(new_state.check_fully_bound_actions(new_state.get_possible_actions(object_list, action_list))[1])
+
+print(new_state)
+print(new_state.state_dictionary)
 # print(predicate_list[0].to_string_ignoring_negation())
 # print(new_state.state_dictionary.get_val(f"{predicate_list[0].to_string_ignoring_negation()}"))
 # print(new_state.state_dictionary.get_val(f"{predicate_list[1].to_string_ignoring_negation()}"))

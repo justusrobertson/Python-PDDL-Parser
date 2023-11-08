@@ -12,10 +12,6 @@ class State:
 
     def update(self, taken_action):
         for effect in taken_action.effects:
-            if effect.is_negated:
-                # thing
-                print("Negated")
-            if not effect.is_negated:
                 self.state_dictionary[f"{effect.to_string_ignoring_negation()}"] = not effect.is_negated
 
     def check_fully_bound_actions(self, possible_actions):
@@ -68,7 +64,8 @@ class State:
     def __str__(self):
         statement_to_print = ""
         for key in self.state_dictionary.keys():
-            statement_to_print += f"{key}\n"
+            if self.state_dictionary.get(key):
+                statement_to_print += f"{key}\n"
 
         return statement_to_print
 

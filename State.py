@@ -6,10 +6,9 @@ class State:
     def __init__(self, literals):
         # for iterating, perhaps using dict in the future will eliminate need
         # for this if it's iterable
-        self.literals = literals
-        self.state_dictionary = HashTable(len(literals))
+        self.state_dictionary = dict()
         for literal in literals:
-            self.state_dictionary.set_val(f"{literal.to_string_ignoring_negation()}", not literal.is_negated)
+            self.state_dictionary[f"{literal.to_string_ignoring_negation()}"] = not literal.is_negated
 
     def update(self, taken_action):
         for effect in taken_action.effects:
@@ -17,8 +16,7 @@ class State:
                 # thing
                 print("Negated")
             if not effect.is_negated:
-                self.literals.append(effect)
-                self.state_dictionary.set_val(f"{effect.to_string_ignoring_negation()}", not effect.is_negated)
+                self.state_dictionary[f"{effect.to_string_ignoring_negation()}"] = not effect.is_negated
 
     def check_fully_bound_actions(self, possible_actions):
         enabled_actions = []
@@ -37,11 +35,9 @@ class State:
         return enabled_actions
 
     def precondition_in_state(self, precondition):
-        # my hash map implementation has no contains key method. I should refactor things in the future.
-        is_enabled = self.state_dictionary.get_val(precondition.to_string_ignoring_negation())
-        if is_enabled == "No record found":
+        if not self.state_dictionary.__contains__(precondition.to_string_ignoring_negation()):
             return False
-        return is_enabled
+        return self.state_dictionary.get(precondition.to_string_ignoring_negation())
 
     # action_templates is a list of Actions
     def get_possible_actions(self, pddl_objects, action_templates):
@@ -71,8 +67,8 @@ class State:
 
     def __str__(self):
         statement_to_print = ""
-        for literal in self.literals:
-            statement_to_print += f"{literal}\n"
+        for key in self.state_dictionary.keys():
+            statement_to_print += f"{key}\n"
 
         return statement_to_print
 

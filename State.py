@@ -29,8 +29,11 @@ class State:
                 #     possible_actions.append(action)
                 #     possible_actions[len(possible_actions) - 1].set_binding(parameter, parameter)
 
+    # current action is an action that's initially unbound.
     def compute_action_binds(self, objects, current_action, set_of_binds):
-        if current_action
+        if current_action.is_fully_bound():
+            for pddl_object in objects:
+                copy_action = current_action
 
 
     def __str__(self):

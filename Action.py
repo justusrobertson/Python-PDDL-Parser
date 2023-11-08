@@ -12,6 +12,22 @@ class Action:
         self.preconditions = []
         self.effects = []
 
+    def __copy__(self, other):
+        self.name = other.name
+        self.parameters = other.parameters
+        self.bindings = HashTable(len(self.parameters))
+        for parameter in self.parameters:
+            self.bindings.set_val(parameter, other.bindings.get_val(parameter))
+        for precondition in other.preconditions:
+            current_predicate = Predicate("", "", False)
+            current_predicate.__copy__(precondition)
+            self.add_precondition(current_predicate)
+
+        for effect in other.effects:
+            current_predicate = Predicate("", "", False)
+            current_predicate.__copy__(effect)
+            self.add_effect(current_predicate)
+
     # precondition should be a Predicate
     def add_precondition(self, precondition):
         # predicate input sanitization
@@ -63,7 +79,7 @@ class Action:
         statement_to_print += "\t\t)\n"
         return statement_to_print
 
-#
+
 # newAction = Action("move", ["mover", "oldLoc", "newLoc"])
 # newAction.add_precondition(Predicate("at", ["mover", "oldLoc"], False))
 # newAction.add_precondition(Predicate("at", ["mover", "newLoc"], True))
@@ -74,10 +90,18 @@ class Action:
 #
 # newAction.set_binding("mover", "arthur")
 # newAction.set_binding("oldLoc", "woods")
-# newAction.set_binding("newLoc", "lake")
-#
-# print(newAction.is_fully_bound())
 
+# print(newAction.is_fully_bound())
+#
 # print(newAction.parameters)
 # print(newAction.bindings)
 # print(newAction)
+#
+# copyAction = Action("", [])
+# copyAction.__copy__(newAction)
+# newAction.set_binding("newLoc", "lake")
+
+
+# print(copyAction.bindings)
+# print(newAction)
+# print(copyAction)

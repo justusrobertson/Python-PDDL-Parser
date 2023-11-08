@@ -11,6 +11,14 @@ class Predicate:
         for parameter in self.parameters:
             self.bindings.set_val(parameter, f"?{parameter}")
 
+    def __copy__(self, other):
+        self.name = other.name
+        self.parameters = other.parameters
+        self.is_negated = other.is_negated
+        self.bindings = HashTable(len(self.parameters))
+        for parameter in self.parameters:
+            self.bindings.set_val(parameter, other.bindings.get_val(parameter))
+
     def set_binding(self, parameter, binding_value):
         self.bindings.set_val(parameter, binding_value)
 

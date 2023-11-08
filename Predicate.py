@@ -1,4 +1,3 @@
-from HashMap import HashTable
 
 
 class Predicate:
@@ -7,20 +6,23 @@ class Predicate:
         self.name = name
         self.parameters = parameters
         self.is_negated = is_negated
-        self.bindings = HashTable(len(parameters))
+        self.bindings = dict()
         for parameter in self.parameters:
-            self.bindings.set_val(parameter, f"?{parameter}")
+            self.bindings[parameter] = f"?{parameter}"
 
     def __copy__(self, other):
         self.name = other.name
         self.parameters = other.parameters
         self.is_negated = other.is_negated
-        self.bindings = HashTable(len(self.parameters))
+        self.bindings = dict()
         for parameter in self.parameters:
-            self.bindings.set_val(parameter, other.bindings.get_val(parameter))
+            self.bindings[parameter] = other.bindings[parameter]
 
     def set_binding(self, parameter, binding_value):
-        self.bindings.set_val(parameter, binding_value)
+        if self.bindings.__contains__(parameter):
+            self.bindings[parameter] = binding_value
+        else:
+            print("Value not in bindings")
 
     def get_predicate_form(self):
         statement_to_print = ""
@@ -41,7 +43,7 @@ class Predicate:
             statement_to_print += "(not "
         statement_to_print += f"({self.name}"
         for parameter in self.parameters:
-            statement_to_print += f" {self.bindings.get_val(parameter)}"
+            statement_to_print += f" {self.bindings[parameter]}"
         statement_to_print += ")"
         if self.is_negated:
             statement_to_print += ")"
@@ -51,19 +53,19 @@ class Predicate:
         statement_to_print = ""
         statement_to_print += f"({self.name}"
         for parameter in self.parameters:
-            statement_to_print += f" {self.bindings.get_val(parameter)}"
+            statement_to_print += f" {self.bindings[parameter]}"
         statement_to_print += ")"
         return statement_to_print
 
 
-# new_predicate = Predicate("at", ["obj", "location"])
+# new_predicate = Predicate("at", ["obj", "location"], False)
 # new_predicate.get_predicate_form()
 # print(new_predicate)
 # new_predicate.set_binding("obj", "arthur")
 # print(new_predicate)
 # new_predicate.set_binding("location", "woods")
 # print(new_predicate)
-
+#
 # false_predicate = Predicate("at", ["obj", "location"], True)
 # false_predicate.get_predicate_form()
 # false_predicate.set_binding("obj", "arthur")

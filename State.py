@@ -29,6 +29,8 @@ class State:
                 #     possible_actions.append(action)
                 #     possible_actions[len(possible_actions) - 1].set_binding(parameter, parameter)
 
+    def compute_action_binds(self, objects, current_action, set_of_binds):
+        if current_action
 
 
     def __str__(self):

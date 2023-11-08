@@ -30,9 +30,18 @@ class Action:
                 return
         self.effects.append(effect)
 
+    def is_fully_bound(self):
+        for parameter in self.parameters:
+            if self.bindings.get_val(parameter).__contains__("?"):
+                return False
+
+        return True
+
     def set_binding(self, parameter, binding_value):
         self.bindings.set_val(parameter, binding_value)
         for predicate in self.preconditions:
+            predicate.set_binding(parameter, binding_value)
+        for predicate in self.effects:
             predicate.set_binding(parameter, binding_value)
 
     def __str__(self):
@@ -54,13 +63,21 @@ class Action:
         statement_to_print += "\t\t)\n"
         return statement_to_print
 
-
+#
 # newAction = Action("move", ["mover", "oldLoc", "newLoc"])
 # newAction.add_precondition(Predicate("at", ["mover", "oldLoc"], False))
 # newAction.add_precondition(Predicate("at", ["mover", "newLoc"], True))
 # newAction.add_effect(Predicate("at", ["mover", "oldLoc"], True))
 # newAction.add_effect(Predicate("at", ["mover", "newLoc"], False))
 #
+# print(newAction.is_fully_bound())
+#
+# newAction.set_binding("mover", "arthur")
+# newAction.set_binding("oldLoc", "woods")
+# newAction.set_binding("newLoc", "lake")
+#
+# print(newAction.is_fully_bound())
+
 # print(newAction.parameters)
 # print(newAction.bindings)
 # print(newAction)

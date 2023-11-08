@@ -12,22 +12,10 @@ class State:
             self.state_dictionary.set_val(f"{literal.to_string_ignoring_negation()}", not literal.is_negated)
 
     # action_templates is a list of Actions
-    def get_possible_actions(self, pddl_object, action_templates):
+    def get_possible_actions(self, pddl_objects, action_templates, set_of_binds):
         possible_actions = []
         for action in action_templates:
-
-            # is recursion needed here? I need a number of for loops = to the number of bindings
-            for parameter in action.parameters:
-                if len(action.parameters == 1):
-                    possible_actions.append(action)
-                    possible_actions[len(possible_actions) - 1].set_binding(parameter, parameter)
-                    break
-                # for parameterCombination in action.parameters:
-                #     if parameter == parameterCombination:
-                #         continue
-                #
-                #     possible_actions.append(action)
-                #     possible_actions[len(possible_actions) - 1].set_binding(parameter, parameter)
+            self.compute_action_binds(pddl_objects, action, set_of_binds)
 
     # current action is an action that's initially unbound.
     def compute_action_binds(self, objects, current_action, set_of_binds):
@@ -79,7 +67,8 @@ action_list[1].add_effect(Predicate("character", ["postTransformCharacter"], Fal
 new_state = State(predicate_list)
 print(new_state)
 set_of_new_bindings = []
-new_state.compute_action_binds(object_list, action_list[1], set_of_new_bindings)
+new_state.get_possible_actions(object_list, action_list, set_of_new_bindings)
+# new_state.compute_action_binds(object_list, action_list[1], set_of_new_bindings)
 
 for fully_bound_action in set_of_new_bindings:
     print(fully_bound_action)

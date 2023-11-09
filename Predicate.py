@@ -18,11 +18,11 @@ class Predicate:
         for parameter in self.parameters:
             self.bindings[parameter] = other.bindings[parameter]
 
+    # A special setter for the bindings dictionary that prevents the creation of
+    # new entries
     def set_binding(self, parameter, binding_value):
         if self.bindings.__contains__(parameter):
             self.bindings[parameter] = binding_value
-        else:
-            print("Value not in bindings")
 
     def get_predicate_form(self):
         statement_to_print = ""

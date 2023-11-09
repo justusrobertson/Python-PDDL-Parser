@@ -6,18 +6,18 @@ class Action:
     def __init__(self, name, parameters):
         self.name = name
         self.parameters = parameters
-        self.bindings = HashTable(len(parameters))
+        self.bindings = dict()
         for parameter in self.parameters:
-            self.bindings.set_val(parameter, f"?{parameter}")
+            self.bindings[parameter] = f"?{parameter}"
         self.preconditions = []
         self.effects = []
 
     def __copy__(self, other):
         self.name = other.name
         self.parameters = other.parameters
-        self.bindings = HashTable(len(self.parameters))
+        self.bindings = dict()
         for parameter in self.parameters:
-            self.bindings.set_val(parameter, other.bindings.get_val(parameter))
+            self.bindings[parameter] = other.bindings[parameter]
         for precondition in other.preconditions:
             current_predicate = Predicate("", "", False)
             current_predicate.__copy__(precondition)
@@ -48,13 +48,13 @@ class Action:
 
     def is_fully_bound(self):
         for parameter in self.parameters:
-            if self.bindings.get_val(parameter).__contains__("?"):
+            if self.bindings[parameter].__contains__("?"):
                 return False
 
         return True
 
     def set_binding(self, parameter, binding_value):
-        self.bindings.set_val(parameter, binding_value)
+        self.bindings[parameter] = binding_value
         for predicate in self.preconditions:
             predicate.set_binding(parameter, binding_value)
         for predicate in self.effects:
@@ -64,7 +64,7 @@ class Action:
         statement_to_print = f"(:action {self.name}\n"
         statement_to_print += " \t:parameters ("
         for parameter in self.parameters:
-            statement_to_print += f" {self.bindings.get_val(parameter)}"
+            statement_to_print += f" {self.bindings[parameter]}"
         statement_to_print += ")\n"
         statement_to_print += "\t:precondition\n"
         statement_to_print += "\t\t(and\n"
@@ -79,7 +79,7 @@ class Action:
         statement_to_print += "\t\t)\n"
         return statement_to_print
 
-
+#
 # newAction = Action("move", ["mover", "oldLoc", "newLoc"])
 # newAction.add_precondition(Predicate("at", ["mover", "oldLoc"], False))
 # newAction.add_precondition(Predicate("at", ["mover", "newLoc"], True))
@@ -90,8 +90,6 @@ class Action:
 #
 # newAction.set_binding("mover", "arthur")
 # newAction.set_binding("oldLoc", "woods")
-
-# print(newAction.is_fully_bound())
 #
 # print(newAction.parameters)
 # print(newAction.bindings)
@@ -100,8 +98,9 @@ class Action:
 # copyAction = Action("", [])
 # copyAction.__copy__(newAction)
 # newAction.set_binding("newLoc", "lake")
-
-
+#
+# print(newAction.is_fully_bound())
+#
 # print(copyAction.bindings)
 # print(newAction)
 # print(copyAction)

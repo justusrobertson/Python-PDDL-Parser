@@ -51,7 +51,7 @@ class State:
                 copy_action.__copy__(current_action)
                 # find the first unbound parameter then break
                 for parameter in copy_action.parameters:
-                    if copy_action.bindings.get_val(parameter).__contains__("?"):
+                    if copy_action.bindings[parameter].__contains__("?"):
                         copy_action.set_binding(parameter, pddl_object)
                         self.compute_action_binds(objects, copy_action, set_of_binds)
                         break
@@ -70,44 +70,44 @@ class State:
         return statement_to_print
 
 
-object_list = ["arthur", "bill"]
-
-predicate_list = [
-    Predicate("player", ["player"], False),
-    Predicate("character", ["character"], False),
-]
-
-predicate_list[0].set_binding("player", object_list[0])
-predicate_list[1].set_binding("character", object_list[0])
-
-action_list = [
-    Action("kill", ["victim"]),
-    Action("transform", ["preTransformCharacter", "postTransformCharacter"])
-]
-action_list[0].add_precondition(Predicate("alive", ["victim"], True))
-action_list[0].add_effect(Predicate("alive", ["victim"], False))
-action_list[1].add_precondition(Predicate("character", ["preTransformCharacter"], False))
-action_list[1].add_effect(Predicate("character", ["preTransformCharacter"], True))
-action_list[1].add_effect(Predicate("character", ["postTransformCharacter"], False))
-
-new_state = State(predicate_list)
+# object_list = ["arthur", "bill"]
+#
+# predicate_list = [
+#     Predicate("player", ["player"], False),
+#     Predicate("character", ["character"], False),
+# ]
+#
+# predicate_list[0].set_binding("player", object_list[0])
+# predicate_list[1].set_binding("character", object_list[0])
+#
+# action_list = [
+#     Action("kill", ["victim"]),
+#     Action("transform", ["preTransformCharacter", "postTransformCharacter"])
+# ]
+# action_list[0].add_precondition(Predicate("alive", ["victim"], True))
+# action_list[0].add_effect(Predicate("alive", ["victim"], False))
+# action_list[1].add_precondition(Predicate("character", ["preTransformCharacter"], False))
+# action_list[1].add_effect(Predicate("character", ["preTransformCharacter"], True))
+# action_list[1].add_effect(Predicate("character", ["postTransformCharacter"], False))
+#
+# new_state = State(predicate_list)
+#
+# print(new_state.state_dictionary)
+#
 # print(new_state)
-# set_of_new_bindings = []
-# new_state.get_possible_actions(object_list, action_list, set_of_new_bindings)
-# new_state.compute_action_binds(object_list, action_list[1], set_of_new_bindings)
 
 # print("fully bound actions:\n")
 # for fully_bound_action in new_state.get_possible_actions(object_list, action_list):
 #     print(fully_bound_action)
 
-print("enabled actions:\n")
-for enabled_action in new_state.check_fully_bound_actions(new_state.get_possible_actions(object_list, action_list)):
-    print(enabled_action)
-
-new_state.update(new_state.check_fully_bound_actions(new_state.get_possible_actions(object_list, action_list))[1])
-
-print(new_state)
-print(new_state.state_dictionary)
+# print("enabled actions:\n")
+# for enabled_action in new_state.check_fully_bound_actions(new_state.get_possible_actions(object_list, action_list)):
+#     print(enabled_action)
+#
+# new_state.update(new_state.check_fully_bound_actions(new_state.get_possible_actions(object_list, action_list))[1])
+#
+# print(new_state)
+# print(new_state.state_dictionary)
 # print(predicate_list[0].to_string_ignoring_negation())
 # print(new_state.state_dictionary.get_val(f"{predicate_list[0].to_string_ignoring_negation()}"))
 # print(new_state.state_dictionary.get_val(f"{predicate_list[1].to_string_ignoring_negation()}"))

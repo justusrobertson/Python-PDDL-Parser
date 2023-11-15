@@ -31,8 +31,13 @@ class State:
         return enabled_actions
 
     def precondition_in_state(self, precondition):
-        if not self.state_dictionary.__contains__(precondition.to_string_ignoring_negation()):
-            return False
+        if precondition.is_negated:
+            if not self.state_dictionary.__contains__(precondition.to_string_ignoring_negation()):
+                return True
+            return not self.state_dictionary.get(precondition.to_string_ignoring_negation())
+        else:
+            if not self.state_dictionary.__contains__(precondition.to_string_ignoring_negation()):
+                return False
         return self.state_dictionary.get(precondition.to_string_ignoring_negation())
 
     # action_templates is a list of Actions

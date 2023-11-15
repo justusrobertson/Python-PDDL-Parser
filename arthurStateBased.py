@@ -117,5 +117,4 @@ while not arthur_domain_0.playerWon:
         i += 1
 
     user_input = input("What would you like to do next?\n")
-    print((arthur_domain_0.parseMove(user_input)))
     arthur_domain_0.doMove(enabled_actions[arthur_domain_0.parseMove(user_input)])

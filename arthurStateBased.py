@@ -28,12 +28,14 @@ class ArthurDomain():
             self.state.get_possible_actions(self.objects, self.action_templates))
 
     # should be some number from 0 to the number of enabled actions
-    def parseMove(self):
-        # TODO: work on parsing the action
-        return True
+    def parseMove(self, inputStr):
+        try:
+            return int(inputStr)
+        except ValueError:
+            return None
 
     def doMove(self, move):
-        assert isinstance(Action, ArthurDomain)
+        isinstance(move, Action)
 
         # do user sanitization and validation here
         self.state.update(move)
@@ -106,11 +108,14 @@ action_list[1].add_effect(Predicate("has", ["taker", "thing"], False))
 
 arthur_domain_0 = ArthurDomain(predicate_list, action_list, object_list)
 
-# print(action_list[0])
 while not arthur_domain_0.playerWon:
     print(arthur_domain_0.prettyPrint())
+    enabled_actions = arthur_domain_0.getLegalNextMoves()
     i = 0
-    for enabled_action in arthur_domain_0.getLegalNextMoves():
+    for enabled_action in enabled_actions:
         print(f"{i}: {enabled_action}")
         i += 1
-    break
+
+    user_input = input("What would you like to do next?\n")
+    print((arthur_domain_0.parseMove(user_input)))
+    arthur_domain_0.doMove(enabled_actions[arthur_domain_0.parseMove(user_input)])

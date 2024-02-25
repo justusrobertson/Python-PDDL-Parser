@@ -6,6 +6,7 @@
 	(domain BANK)
 	(:requirements :strips)
 	(:predicates 
+		(player ?x)
 		(character ?x)
 		(at ?x ?y)
 	    (has ?x ?y)

@@ -4,7 +4,7 @@ from Action import Action
 from Predicate import Predicate
 from PDDL_Object import PDDL_Object
 
-class BaseParser:
+class TypedParser:
     def readObjects(self, fileName):
         with open(fileName) as file:
             for line in file:
@@ -15,9 +15,8 @@ class BaseParser:
 
                     while '(:INIT' not in line[0].strip():
                         line[0] = line[0].strip(')')
-                        pddlObject = PDDL_Object(line.pop(0), '')
-                        objects_array.append(pddlObject)
-                        #objects_array.append(line.pop(0))
+                        pddl_object = PDDL_Object(line.pop(0), '')
+                        objects_array.append(pddl_object)
 
                         if len(line) == 0:
                             line = file.readline().split()
@@ -43,18 +42,15 @@ class BaseParser:
                             # Last variable for this predicate 
                             if line[0].strip()[-1] == ')':
                                 line[0] = line[0].rstrip(')')
-                                pddlObject = PDDL_Object(line.pop(0), '')
-                                localArray.append(pddlObject)
+                                localArray.append(line.pop(0))
                                 # Creating the predicate
-                                #TODO: The next line fucks up the pred_dict
-                                fileParser.setPredsToObjects(init_array, localPred, localArray)
-                                #TODO: The next line fucks up the initial array bindings
                                 #init_array.append(Predicate(localPred, localArray, False))
+                                fileParser2.setPredsToObjects(localPred, localArray)
                                 localArray = []
-
                             # Additional variable for this predicate
                             else:
                                 localArray.append(line.pop(0))
+                            #fileParser2.setPredsToObjects(localPred, localArray)
 
                         line = file.readline().split()
 
@@ -78,16 +74,13 @@ class BaseParser:
                             localArray.append(vars.strip('?)'))
                         # Creates new predicate object and sets it to the dictionary
                         predicate_dictionary[localName] = Predicate(localName, localArray, False)
-                        
-
                         localArray = []
                         # Reads in the next line
                         line = file.readline()
-        #for key, value in predicate_dictionary.items():
-            #predicate_dictionary_copy[key] = value
-        
+    '''
+
     # Sets the objects to the corresponding variable in the initial state
-    '''def setPredsToObjects(self):
+    def setPredsToObjects(self):
         # Loop through initial state dictionary
         for i, state in enumerate(init_array):
                 # Loop through objects array
@@ -97,11 +90,11 @@ class BaseParser:
                     # Check if the words match, and set it
                     # Set object to the predicate
                         if obj == vars.upper():
-                            pred.set_binding(init_array[i].parameters[j], vars.upper())
-                            break'''
-
-    def setPredsToObjects(self, array, localName, localArray):
-        pred = predicate_dictionary[localName]
+                            init_array[i].set_binding(init_array[i].parameters[j], vars.upper())
+                            break
+    '''
+    def setPredsToObjects(self, localName, localArray):
+        pred = predicate_dictionary_copy[localName]
         i = 0
         while i < len(pred.parameters):
             #init_array[i].set_binding(pred.parameters[i], localArray[i])
@@ -145,12 +138,10 @@ class BaseParser:
                             parameters.append(params.strip('(?'))
 
                 if ':precondition' in line:
-                    #fileParser.readActionsHelper(file, 'precondition')
-                    print()
+                    fileParser.readActionsHelper(file, 'precondition')
                 
                 if ':effect' in line:
-                    #fileParser.readActionsHelper(file, 'effect')
-                    print()
+                    fileParser.readActionsHelper(file, 'effect')
 
             line = file.readline()
     
@@ -168,6 +159,9 @@ class BaseParser:
                 negated = True
                 line.pop(0)
 
+            else:
+                negated = False
+
             # Gets the name
             if '(' in line[0]:
                 line[0] = line[0].lstrip('(')
@@ -179,7 +173,6 @@ class BaseParser:
                 if ')' in line[0]:
                     localArray.append(line[0].strip(')'))
                     predicateObject = Predicate(localName, localArray, negated)
-                    #fileParser.setPredsToObjects(action_dictionary, localName, localArray)
                     localArray = []
                     line.pop(0)
                     length = len(action_dictionary) - 1
@@ -212,42 +205,41 @@ class BaseParser:
 
 predicate_dictionary = {}
 predicate_dictionary_copy = {}
-
-pred = {}
-pissBabyArray = []
-
 action_dictionary = []
 objects_array = []
 init_array = []
-fileParser = BaseParser()
+fileParser2 = TypedParser()
 
-fileParser.readPredicate('bankWorld/domain.pddl')
+fileParser2.readPredicate('bankWorld/domain.pddl')
+fileParser2.readObjects('bankWorld/prob01.pddl')
 predicate_dictionary_copy = copy.deepcopy(predicate_dictionary)
-
-fileParser.readObjects('bankWorld/prob01.pddl')
-fileParser.readInitState('bankWorld/prob01.pddl')
-#fileParser.setPredsToObjects()
-fileParser.readActions('bankWorld/domain.pddl')
+fileParser2.readInitState('bankWorld/prob01.pddl')
+#fileParser2.setPredsToObjects()
+#fileParser2.readActions('bankWorld/domain.pddl')
 
 print("\nObjects Array:")
 print([str(x.name) for x in objects_array])
 
-print("\nInit State:")
-print([str(x) for x in init_array])
-print("\ninit_array")
-for i in init_array:
-    print(init_array[i].bindings.name)
-
-
-#TODO: overwrites the previous values
 print("\nPredicate Array:")
+for key in predicate_dictionary:
+    print(predicate_dictionary[key])
+
+
+print("\nPredicate Array Copy:")
 for key in predicate_dictionary_copy:
     print(predicate_dictionary_copy[key])
+
+
+print("\nInit State:")
+print([str(x.bindings) for x in init_array])
+
+print("\nInit State:")
+print([str(x) for x in init_array])
+
 '''
-print('\n')
+#print('\n')
 print("\nActions:")
 i = 0
 while i < len(action_dictionary):
     print(action_dictionary[i])
-    i += 1
-    '''
+    i += 1'''

@@ -50,6 +50,8 @@ predicate_list = parser.getPredicateDict()
 init_array = parser.getinitState()
 action_list_test = parser.getActions()
 
+print([str(x.name) for x in object_list])
+
 bank_world_domain_0 = ParserTestFile(init_array, action_list_test, object_list)
 
 while not bank_world_domain_0.playerWon:

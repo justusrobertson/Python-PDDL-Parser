@@ -17,7 +17,6 @@ class BaseParser:
                         line[0] = line[0].strip(')')
                         pddlObject = PDDL_Object(line.pop(0), '')
                         objects_array.append(pddlObject)
-                        #objects_array.append(line.pop(0))
 
                         if len(line) == 0:
                             line = file.readline().split()
@@ -40,22 +39,21 @@ class BaseParser:
                             if '(' in line[0]:
                                 line[0] = line[0].lstrip('(')
                                 localPred = line.pop(0)
-                            # Last variable for this predicate 
-                            if line[0].strip()[-1] == ')':
+
+                            i = 0
+                            while i < len(objects_array):
                                 line[0] = line[0].rstrip(')')
-                                pddlObject = PDDL_Object(line.pop(0), '')
-                                localArray.append(pddlObject)
-                                # Creating the predicate
-                                #TODO: The next line fucks up the pred_dict
-                                fileParser.setPredsToObjects(init_array, localPred, localArray)
-                                #TODO: The next line fucks up the initial array bindings
-                                #init_array.append(Predicate(localPred, localArray, False))
-                                localArray = []
-
-                            # Additional variable for this predicate
-                            else:
-                                localArray.append(line.pop(0))
-
+                                if objects_array[i].name == line[0].upper():
+                                    pddlObject = objects_array[i]
+                                    line.pop(0)
+                                    localArray.append(pddlObject)
+                                    # Creating the predicate
+                                    if not line or '(' in line[0]:
+                                        fileParser.setPredsToObjects(init_array, localPred, localArray)
+                                        localArray = []
+                                        i = 0
+                                        break
+                                i += 1
                         line = file.readline().split()
 
     # Reads in the possible predicates from the domain file
@@ -104,18 +102,9 @@ class BaseParser:
         pred = predicate_dictionary[localName]
         i = 0
         while i < len(pred.parameters):
-            #init_array[i].set_binding(pred.parameters[i], localArray[i])
-            #TODO: This changes the predicate dictionary
-            #TODO: change localArray[i] to be a PDDL_Object instead of a string
             pred.set_binding(pred.parameters[i], localArray[i])
-            #pissBabyArray.append(predicate_dictionary[localName])
-            #if array == init_array:
-                #init_array.append(pred)
-            init_array.append(pred)
-            #else:
-                #array.append(pred)
-
             i += 1
+        init_array.append(pred)
 
     def readActions(self, fileName):
         # Name of action
@@ -214,7 +203,6 @@ predicate_dictionary = {}
 predicate_dictionary_copy = {}
 
 pred = {}
-pissBabyArray = []
 
 action_dictionary = []
 objects_array = []
@@ -229,17 +217,17 @@ fileParser.readInitState('bankWorld/prob01.pddl')
 #fileParser.setPredsToObjects()
 fileParser.readActions('bankWorld/domain.pddl')
 
-print("\nObjects Array:")
-print([str(x.name) for x in objects_array])
+#print("\nObjects Array:")
+#print([str(x.name) for x in objects_array])
 
 print("\nInit State:")
-print([str(x) for x in init_array])
-print("\ninit_array")
-for i in init_array:
-    print(init_array[i].bindings.name)
+i = 0
+while i < len(init_array):
+    #print(init_array[i])
+    print(str(x.bindings) for x in init_array)
+    #print([str(x.name) for x in objects_array])
+    i += 1
 
-
-#TODO: overwrites the previous values
 print("\nPredicate Array:")
 for key in predicate_dictionary_copy:
     print(predicate_dictionary_copy[key])

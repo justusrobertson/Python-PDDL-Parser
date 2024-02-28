@@ -6,3 +6,10 @@ class PDDL_Object:
         # an array of strings
         self.types = types
 
+    def __str__(self):
+        statement_to_print = ""
+        statement_to_print += f"{self.name}"
+        for i in self.types:
+            statement_to_print += f" {self.types[i]}"
+        return statement_to_print
+

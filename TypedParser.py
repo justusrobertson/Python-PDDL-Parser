@@ -1,7 +1,7 @@
 import copy
 from State import State
 from Action import Action
-from Predicate import Predicate
+from TypedPredicate import TypedPredicate
 from PDDL_Object import PDDL_Object
 
 class BaseParser:
@@ -20,14 +20,14 @@ class BaseParser:
                     while ')' not in line[0].strip():
                         #line[0] = line[0].strip(')')
                         while line[0] != '-':
-                            pddlObject = PDDL_Object(line.pop(0), '')
+                            pddlObject = PDDL_Object(line.pop(0), [])
                             localArray.append(pddlObject)
                             #objects_array.append(pddlObject)
 
                         if line[0] == '-':
                             line.pop(0)
                             for objs in localArray:
-                                objs.types = line[0]
+                                objs.types.append(line[0])
                                 objects_array.append(objs)
                             localArray = []
                             line.pop(0)
@@ -74,6 +74,7 @@ class BaseParser:
     def readPredicate(self, fileName):
         localName = ''
         localArray = []
+        localType = []
         with open(fileName) as file:
             for line in file:
                 # Reads only after the predicate token
@@ -85,13 +86,20 @@ class BaseParser:
                         line = line.strip().lstrip('(').split()
                         localName = line.pop(0)
                         # Goes over the remaining variables in the sliceLine array
-                        for vars in line:
-                            # Gets rid of the characters around it
-                            localArray.append(vars.strip('?)'))
-                        # Creates new predicate object and sets it to the dictionary
-                        predicate_dictionary[localName] = Predicate(localName, localArray, False)
-                        
+                        while line:
+                            if '?' in line[0]:
+                                localArray.append(line[0].strip('?'))
+                                line.pop(0)
 
+                            if '-' in line[0]:
+                                line.pop(0)
+                                localType.append(line[0].strip(')'))
+                                line.pop(0)
+
+                        # Creates new predicate object and sets it to the dictionary
+                        predicate_dictionary[localName] = TypedPredicate(localName, localArray, localType, False)
+                        
+                        localType = []
                         localArray = []
                         # Reads in the next line
                         line = file.readline()

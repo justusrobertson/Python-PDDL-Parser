@@ -10,6 +10,6 @@ class PDDL_Object:
         statement_to_print = ""
         statement_to_print += f"{self.name}"
         for i in self.types:
-            statement_to_print += f" {self.types[i]}"
+            statement_to_print += f" {i}"
         return statement_to_print
 

@@ -154,6 +154,7 @@ class BaseParser:
                     localArray.append(line[0].strip(')'))
                     predicateObject = Predicate(localName, localArray, negated)
                     #fileParser.setPredsToObjects(action_dictionary, localName, localArray)
+                    
                     localArray = []
                     line.pop(0)
                     length = len(action_dictionary) - 1
@@ -208,7 +209,6 @@ i = 0
 while i < len(init_array):
     print(init_array[i])
     i += 1
-
 
 print("\nPredicate Array:")
 for key in predicate_dictionary:

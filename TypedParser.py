@@ -232,9 +232,9 @@ print([str(x) for x in objects_array])
   #  i += 1
 
 
-#print("\nPredicate Array:")
-#for key in predicate_dictionary:
- #   print(predicate_dictionary[key])
+print("\nPredicate Array:")
+for key in predicate_dictionary:
+    print(predicate_dictionary[key])
 
 #print('\n')
 #print("\nActions:")

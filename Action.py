@@ -8,7 +8,7 @@ class Action:
         self.parameters = parameters
         self.bindings = dict()
         for parameter in self.parameters:
-            self.bindings[parameter] = f"?{parameter}"
+            self.bindings[parameter] = None
         self.preconditions = []
         self.effects = []
 
@@ -48,7 +48,7 @@ class Action:
 
     def is_fully_bound(self):
         for parameter in self.parameters:
-            if self.bindings[parameter].__contains__("?"):
+            if self.bindings[parameter] == None:
                 return False
 
         return True

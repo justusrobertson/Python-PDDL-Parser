@@ -9,7 +9,7 @@ class PDDL_Object:
     def __str__(self):
         statement_to_print = ""
         statement_to_print += f"{self.name}"
-        for i in self.types:
-            statement_to_print += f" {i}"
+        #for i in self.types:
+            #statement_to_print += f" {i}"
         return statement_to_print
 

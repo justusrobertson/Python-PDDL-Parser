@@ -43,10 +43,12 @@ class BaseParser:
         with open(fileName) as file:
             for line in file:
                 # Reads only after the initial token
-                if '(:INIT' in line:
-                    line = line.strip('(:INIT').split()
+                if '(:init' in line:
+                    line = file.readline().split()
                     # Reads until it reaches the next token
-                    while '(:goal' not in line[0].strip():
+                    #TODO: creates an error when there is an empty line - does not occur when there is no break
+                    #TODO: re-add break between connected and other init states
+                    while '(:goal' not in line[0]:#.strip() or len(line) == 0:
                         # Reads until the line is empty
                         while len(line) != 0:
                             # Adds the predicate to the array
@@ -54,10 +56,14 @@ class BaseParser:
                                 line[0] = line[0].lstrip('(')
                                 localPred = line.pop(0)
 
+                            if line[0] == (')'):
+                                return
+                            
                             i = 0
                             while i < len(objects_array):
+                                
                                 line[0] = line[0].rstrip(')')
-                                if objects_array[i].name == line[0].upper():
+                                if objects_array[i].name == line[0]:
                                     pddlObject = objects_array[i]
                                     line.pop(0)
                                     localArray.append(pddlObject)
@@ -68,7 +74,9 @@ class BaseParser:
                                         i = 0
                                         break
                                 i += 1
-                        line = file.readline().split()
+                        if len(line) == 0:
+                            line = file.readline().split()
+                            #print(line)
 
     # Reads in the possible predicates from the domain file
     def readPredicate(self, fileName):
@@ -219,27 +227,27 @@ probFile = 'oz-typed/prob01.pddl'
 
 fileParser.readPredicate(domainFile)
 fileParser.readObjects(probFile)
-#fileParser.readInitState(probFile)
+fileParser.readInitState(probFile)
 #fileParser.readActions(domainFile)
 
 print("\nObjects Array:")
 print([str(x) for x in objects_array])
 
-#print("\nInit State:")
-#i = 0
-#while i < len(init_array):
- #   print(init_array[i])
-  #  i += 1
+print("\nInit State:")
+i = 0
+while i < len(init_array):
+    print(init_array[i])
+    i += 1
 
 
 print("\nPredicate Array:")
 for key in predicate_dictionary:
     print(predicate_dictionary[key])
 
-#print('\n')
-#print("\nActions:")
-#i = 0
-#while i < len(action_dictionary):
- #   print(action_dictionary[i])
-  #  i += 1
+print('\n')
+print("\nActions:")
+i = 0
+while i < len(action_dictionary):
+    print(action_dictionary[i])
+    i += 1
     

@@ -15,7 +15,6 @@
 		(at-thing slippers town)
 		(has glinda magic-wand)
 		(enchanted slippers)
-		
 		(connected castle town)
 		(connected town castle)
 		(connected castle woods)

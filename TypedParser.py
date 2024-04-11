@@ -1,10 +1,12 @@
 import copy
 from State import State
-from Action import Action
+from TypedAction import TypedAction
 from TypedPredicate import TypedPredicate
 from PDDL_Object import PDDL_Object
+from Parameter_Object import Parameter_Object
 
-class BaseParser:
+
+class TypedParser:
     def readObjects(self, fileName):
         localArray = []
         with open(fileName) as file:
@@ -48,7 +50,7 @@ class BaseParser:
                     # Reads until it reaches the next token
                     #TODO: creates an error when there is an empty line - does not occur when there is no break
                     #TODO: re-add break between connected and other init states
-                    while '(:goal' not in line[0]:#.strip() or len(line) == 0:
+                    while '(:goal' not in line:#.strip() or len(line) == 0:
                         # Reads until the line is empty
                         while len(line) != 0:
                             # Adds the predicate to the array
@@ -105,7 +107,8 @@ class BaseParser:
                                 line.pop(0)
 
                         # Creates new predicate object and sets it to the dictionary
-                        predicate_dictionary[localName] = TypedPredicate(localName, localArray, localType, False)
+                        #predicate_dictionary[localName] = TypedPredicate(localName, localArray, localType, False)
+                        predicate_dictionary[localName] = TypedPredicate(localName, localArray, False)
                         
                         localType = []
                         localArray = []
@@ -126,6 +129,7 @@ class BaseParser:
         actionName = ''
         # List of parameters
         parameters = []
+        paramObject_array = []
         
         with open(fileName) as file:
             for line in file:
@@ -139,14 +143,44 @@ class BaseParser:
                 if ':parameters' in line:
                     line.pop(0)
                     
+                    i = 0
                     for params in line:
                         if params.strip()[-1] == ')':
                             parameters.append(params.strip(')?'))
-                            action_dictionary.append(Action(actionName, parameters))
+                            ######
+                            action_dictionary.append(TypedAction(actionName, paramObject_array))
+
+                            
+                            ######
                             parameters = []
+                            paramObject_array = []
+
+                        # typed
+                        if params == '-':
+                            #TODO:
+                            paramType = line[i + 1]
+                            paramObject = Parameter_Object(parameters[len(parameters) - 1], paramType)
+                            paramObject_array.append(paramObject)
+
 
                         else:
                             parameters.append(params.strip('(?'))
+
+                        i += 1
+                    #TODO: go over each object and map them to parameters
+                    ''''''
+
+                    for actions in action_dictionary:
+                        pred = copy.deepcopy(actions)
+                        for actionsParam in pred.parameters:
+                            #TODOgive only one binging value, not a list
+                            pred.set_binding(pred.parameters[len(action_dictionary) - 1], paramObject_array)
+                    j = 0
+                    while j < len(pred.parameters):
+                        pred.set_binding(pred.parameters[j], paramObject_array[j])
+                        j += 1
+                    action_dictionary.append(pred)
+                    ''''''
 
                 if ':precondition' in line:
                     fileParser.readActionsHelper(file, 'precondition')
@@ -182,7 +216,7 @@ class BaseParser:
 
                 if ')' in line[0]:
                     localArray.append(line[0].strip(')'))
-                    predicateObject = Predicate(localName, localArray, negated)
+                    predicateObject = TypedPredicate(localName, localArray, negated)
                     #fileParser.setPredsToObjects(action_dictionary, localName, localArray)
                     localArray = []
                     line.pop(0)
@@ -220,7 +254,7 @@ pred = {}
 action_dictionary = []
 objects_array = []
 init_array = []
-fileParser = BaseParser()
+fileParser = TypedParser()
 
 domainFile = 'oz-typed/domain.pddl'
 probFile = 'oz-typed/prob01.pddl'
@@ -228,7 +262,7 @@ probFile = 'oz-typed/prob01.pddl'
 fileParser.readPredicate(domainFile)
 fileParser.readObjects(probFile)
 fileParser.readInitState(probFile)
-#fileParser.readActions(domainFile)
+fileParser.readActions(domainFile)
 
 print("\nObjects Array:")
 print([str(x) for x in objects_array])
@@ -239,15 +273,26 @@ while i < len(init_array):
     print(init_array[i])
     i += 1
 
-
 print("\nPredicate Array:")
 for key in predicate_dictionary:
     print(predicate_dictionary[key])
 
-print('\n')
-print("\nActions:")
-i = 0
-while i < len(action_dictionary):
-    print(action_dictionary[i])
-    i += 1
-    
+print("\n\nActions:")
+for action in action_dictionary:
+    print(action)
+
+
+    #TODO: finish parser- actions and '\n'
+    #TODO 1st: create typed parameters - create a Parameter_Object
+    # change from strings to objects, objects need types - create new parameters in parser, maps parameter objects to objects, should be same structure as a pddl_object
+    #TODO: update state (compute_action_binds)
+    # check if the type of the object matches the parameter type, if not skip it on line 62
+    #pddl_object.type == parameter.type
+
+    # later
+    # instead of having a single type, have a set of types, add in the super types in domain, check
+    # if anything on the left side is on the right
+    # ring is a thing and holdable and object
+    # go through pddl_object list, check if the types are present on the left side, add the right side then
+    # 
+    # 

@@ -2,11 +2,11 @@
 
 class TypedPredicate:
     # bindings not required so we may have generic predicates
-    def __init__(self, name, parameters, types, is_negated):
+    def __init__(self, name, parameters, is_negated):
         self.name = name
         self.parameters = parameters
         self.is_negated = is_negated
-        self.types = types
+        #self.types = types
         self.bindings = dict()
         for parameter in self.parameters:
             self.bindings[parameter] = f"?{parameter}"

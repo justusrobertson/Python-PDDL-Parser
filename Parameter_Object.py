@@ -1,5 +1,5 @@
 
-class PDDL_Object:
+class Parameter_Object:
     def __init__(self, name, types):
         # a string
         self.name = name
@@ -8,8 +8,8 @@ class PDDL_Object:
 
     def __str__(self):
         statement_to_print = ""
-        statement_to_print += f"{self.name} -"
+        statement_to_print += f"{self.name} - "
         for i in self.types:
-            statement_to_print += f" {i}"
+            statement_to_print += f"{i}"
         return statement_to_print
 

@@ -41,7 +41,8 @@ class TypedAction:
     def add_effect(self, effect):
         # effect input sanitization
         for parameter in effect.parameters:
-            if parameter not in self.parameters:
+            print((self.parameters).name)
+            if parameter not in self.parameters.name:
                 print(f"The Effect parameter '{parameter}' does not exist as an action parameter.")
                 return
         self.effects.append(effect)

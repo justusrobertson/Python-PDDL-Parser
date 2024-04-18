@@ -37,7 +37,39 @@ class TypedParser:
                         if len(line) == 0:
                             line = file.readline().split()
 
-    
+    # Reads in the object types from the domain file
+    def readTypes(self, fileName, objectArray):
+        localArray = []
+        newType = ''
+        splitLine = []
+        with open(fileName) as file:
+            for line in file:
+                if '(:types' in line:
+                    line = line.split()
+                    line.pop(0)
+                    for i in line:
+                        if '-' in i:
+                            newType = line[-1]
+                            for obj in objectArray:
+                                for localType in localArray:
+                                    for objType in obj.types:
+                                        if objType == localType:
+                                            obj.append(newType)
+                            line = file.readline.split()
+
+                        if ')' in i:
+                            return
+                        
+                        if len(line) == 0:
+                            line = file.readline.split()
+
+                        else:
+                            localArray.append(i)
+                    #'-'
+                    #')'
+                    #otherwise
+                    print(splitLine)
+
     # Reads in the initial state from the problem file
     def readInitState(self, fileName):
         localPred = ''
@@ -150,7 +182,12 @@ class TypedParser:
                             ######
                             action_dictionary.append(TypedAction(actionName, paramObject_array))
 
-                            
+                            for actions in action_dictionary:
+                                pred = copy.deepcopy(actions)
+                                for actionsParam in pred.parameters:
+                                    for paramObject in paramObject_array:
+                                        #TODOgive only one binging value, not a list
+                                        pred.set_binding(pred.parameters[len(action_dictionary) - 1], paramObject)
                             ######
                             parameters = []
                             paramObject_array = []
@@ -168,19 +205,15 @@ class TypedParser:
 
                         i += 1
                     #TODO: go over each object and map them to parameters
-                    ''''''
+                    '''
 
-                    for actions in action_dictionary:
-                        pred = copy.deepcopy(actions)
-                        for actionsParam in pred.parameters:
-                            #TODOgive only one binging value, not a list
-                            pred.set_binding(pred.parameters[len(action_dictionary) - 1], paramObject_array)
+                    
                     j = 0
                     while j < len(pred.parameters):
                         pred.set_binding(pred.parameters[j], paramObject_array[j])
                         j += 1
                     action_dictionary.append(pred)
-                    ''''''
+                    '''
 
                 if ':precondition' in line:
                     fileParser.readActionsHelper(file, 'precondition')
@@ -261,8 +294,9 @@ probFile = 'oz-typed/prob01.pddl'
 
 fileParser.readPredicate(domainFile)
 fileParser.readObjects(probFile)
+fileParser.readTypes(domainFile, objects_array)
 fileParser.readInitState(probFile)
-fileParser.readActions(domainFile)
+#fileParser.readActions(domainFile)
 
 print("\nObjects Array:")
 print([str(x) for x in objects_array])

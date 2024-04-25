@@ -71,6 +71,8 @@
 				(at-thing ?thing ?location)
 			)
 	    :effect
-			(not (enchanted ?thing))
+			(and
+				(not (enchanted ?thing))
+			)
 	)
 )

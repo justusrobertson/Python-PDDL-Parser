@@ -32,19 +32,26 @@ class TypedAction:
     def add_precondition(self, precondition):
         # predicate input sanitization
         for parameter in precondition.parameters:
-            if parameter not in self.parameters:
-                print(f"The Predicate parameter '{parameter}' does not exist as an action parameter.")
-                return
-        self.preconditions.append(precondition)
+            for self_params in self.parameters:
+                if parameter not in self_params.name and self.parameters[-1] == self_params:
+                    print(f"The Predicate parameter '{parameter}' does not exist as an action parameter.")
+                    return
+                if parameter == self_params.name:
+                    self.preconditions.append(precondition)
+                    return
 
     # effect should be a Predicate
     def add_effect(self, effect):
         # effect input sanitization
+        #TODO probably implement __eq__(other) in whatever type of object parameter is
         for parameter in effect.parameters:
-            if parameter not in self.parameters:
-                print(f"The Effect parameter '{parameter}' does not exist as an action parameter.")
-                return
-        self.effects.append(effect)
+            for self_params in self.parameters:
+                if parameter not in self_params.name and self.parameters[-1] == self_params:
+                    print(f"The Effect parameter '{parameter}' does not exist as an action parameter.")
+                    return
+                if parameter == self_params.name:
+                    self.effects.append(effect)
+                    return
 
     def is_fully_bound(self):
         for parameter in self.parameters:

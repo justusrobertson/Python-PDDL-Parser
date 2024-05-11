@@ -1,0 +1,20 @@
+TypedAction, TypedState, and TypedPredicate are copies of their untyped versions but are updated to using objects and with a few extra for loops to go through lists
+
+Classes created:
+PDDL_Object - A object class updated from strings in the original version, keeps track of name and types
+Parameter_Object - A parameter object updated from strings in the original version, keeps track of name and types
+parserTestFile - A copy of aruthurStateBased that uses the new parser to read in the PDDL file instead of hardcoding
+
+Functions created:
+readPredicate - Reads in the predicates in the domain file
+readObjects - Reads in the objects in the problem file
+readTypes - Only in the TypedParser, adds types from the domain file to the objects
+readInitState - Reads the initial state in the problem file
+readActions - Reads in the actions from the domain file
+readActionsHelper - Reads in the effects and preconditions for each action
+setPredsToObjects - Sets the objects to the corresponding variable in the initial state
+
+Bugs:
+* parserTestFile has an error when trying to run: AttributeError: 'str' object has no attribute 'to_string'
+
+* Updating the strings to objects in the BaseParser file has affected the actions. I think this happens because I'm passing in a list of parameters instead of individual ones. This is what it prints out as: :parameters ( None None None None)

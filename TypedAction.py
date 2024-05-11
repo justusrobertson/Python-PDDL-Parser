@@ -71,7 +71,10 @@ class TypedAction:
         statement_to_print = f"(:action {self.name}\n"
         statement_to_print += " \t:parameters ("
         for parameter in self.parameters:
-            statement_to_print += f" {self.bindings[parameter]}"
+            if parameter == self.parameters[-1]:
+                statement_to_print += f" {self.bindings[parameter]}"
+            else:
+                statement_to_print += f" {self.bindings[parameter]} | "
         statement_to_print += ")\n"
         statement_to_print += "\t:precondition\n"
         statement_to_print += "\t\t(and\n"

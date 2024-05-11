@@ -166,7 +166,6 @@ class TypedParser:
                     i = 0
                     for params in line:
                         if params.strip()[-1] == ')':
-                            parameters.append(params.strip(')?'))
                             action_dictionary.append(TypedAction(actionName, paramObject_array))
 
                             parameters = []
@@ -174,7 +173,7 @@ class TypedParser:
 
                         # typed
                         if params == '-':
-                            paramType = line[i + 1]
+                            paramType = line[i + 1].strip(')')
                             paramObject = Parameter_Object(parameters[len(parameters) - 1], paramType)
                             paramObject_array.append(paramObject)
                             local_Param_array.append(paramObject)
@@ -232,7 +231,6 @@ class TypedParser:
                 if ')' in line[0]:
                     localArray.append(line[0].strip(')'))
                     predicateObject = TypedPredicate(localName, localArray, negated)
-                    #fileParser.setPredsToObjects(action_dictionary, localName, localArray)
                     localArray = []
                     line.pop(0)
                     length = len(action_dictionary) - 1
@@ -295,6 +293,6 @@ print("\nPredicate Array:")
 for key in predicate_dictionary:
     print(predicate_dictionary[key])
 
-print("\n\nActions:")
+print("\nActions:")
 for action in action_dictionary:
     print(action)
